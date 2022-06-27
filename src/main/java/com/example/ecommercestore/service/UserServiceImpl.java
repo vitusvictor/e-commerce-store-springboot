@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userRegisterDto.getUsername());
         user.setEmail(userRegisterDto.getEmail());
         user.setPassword(userRegisterDto.getPassword());
-        user.setPasswordConfirm(userRegisterDto.getPasswordConfirm());
         user.setFirstName(userRegisterDto.getFirstName());
         user.setLastName(userRegisterDto.getLastName());
         user.setAge(userRegisterDto.getAge());
@@ -41,7 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -68,11 +67,18 @@ public class UserServiceImpl implements UserService {
         user.setUsername(updateUserDto.getUsername());
         user.setEmail(updateUserDto.getEmail());
         user.setPassword(updateUserDto.getPassword());
-        user.setPasswordConfirm(updateUserDto.getPasswordConfirm());
         user.setFirstName(updateUserDto.getFirstName());
         user.setLastName(updateUserDto.getLastName());
         user.setAge(updateUserDto.getAge());
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User login(String email, String password) {
+        User user = userRepository.findByEmailAndPassword(email, password)
+                .orElseThrow(()-> new CustomAppException("User doesn't exit."));
+
+        return user;
     }
 }

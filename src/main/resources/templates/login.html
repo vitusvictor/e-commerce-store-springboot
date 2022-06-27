@@ -2,41 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Login</title>
 </head>
 <body>
 
 
-<div class="container">
-    <div class="row">
+<div class="container" style="margin-bottom: 30px">
+    <div class="row" style="align-content: center">
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-            <form autocomplete="off" th:action="@{/login}" class="form-signin" method="POST">
-                <div th:if="${param.logout}">
-                    <div class="alert alert-info" th:text="#{login.alert.logged_out}"></div>
+            <form th:action="@{/home}" method="post" th:object="${user}">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" th:field="*{email}" class="form-control" id="email">
                 </div>
-                <fieldset>
-                    <h1 th:text="#{login.sign_in}"></h1>
-                    <label th:text="#{user.username}"></label>
-                    <div class="form-group">
-                        <input type="text" name="username" class="form-control input-lg" placeholder="" required="true" autofocus="true"/>
-                    </div>
-                    <label th:text="#{user.password}"></label>
-                    <div class="form-group">
-                        <input type="password" name="password" class="form-control input-lg" placeholder="" required="true" />
-                    </div>
-                    <div th:if="${param.error}">
-                        <div class="alert alert-danger" th:text="*{error}"></div>
-                    </div>
-                    <span th:text="#{login.no_account}"></span>
-                    <span>
-                            <a th:href="@{/register}" th:text="#{register.button}"></a>
-                        </span>
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <input type="submit" name="login-sumbit" id="login-sumbit" class="btn btn-lg btn-primary btn-block" th:value="#{user.log_in}" />
-                        </div>
-                    </div>
-                </fieldset>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" th:field="*{password}" class="form-control" id="password">
+                </div>
+                <button type="submit" class="btn btn-primary">Sign in</button>
             </form>
         </div>
     </div>

@@ -26,8 +26,6 @@ public class User {
 
     private String password;
 
-    private String passwordConfirm;
-
     @Column(name = "first_name")
     private String firstName;
 

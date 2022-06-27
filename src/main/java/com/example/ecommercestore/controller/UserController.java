@@ -3,33 +3,79 @@ package com.example.ecommercestore.controller;
 import com.example.ecommercestore.dto.UserRegisterDto;
 import com.example.ecommercestore.models.User;
 import com.example.ecommercestore.service.UserService;
+import com.example.ecommercestore.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class UserController {
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    public UserController(UserService userService){
-        this.userService = userService;
+    @GetMapping("/login")
+    public ModelAndView getLoginForm(){
+        ModelAndView mav = new ModelAndView("login");
+        mav.addObject("user", new User());
+
+        return mav;
     }
 
-//    @GetMapping("/register")
-//    public String register(Model model) {
-//        model.addAttribute("userForm", new User());
-//        return "register";
-//    }
+    @PostMapping("/login")
+    public String login(@ModelAttribute("user") User user ) {
 
-    @RequestMapping(value = {"/register", "/"}, method = RequestMethod.GET)
-    public String register(){
-        return "register";
+        User oauthUser = userService.login(user.getEmail(), user.getPassword());
+
+        System.out.print(oauthUser);
+        if(Objects.nonNull(oauthUser))
+        {
+            if (oauthUser.getEmail().equals("admin@gmail.com") && oauthUser.getPassword().equals("admin")){
+                return "redirect:/adminHome";
+            }
+            return "redirect:/home";
+        } else {
+            return "redirect:/login";
+        }
+
     }
 
+    @GetMapping("/home")
+    public String home(Model model) {
+        List<User> listOfUsers = userService.getAllUsers();
+        model.addAttribute("listOfUsers", listOfUsers);
+        return "home";
+    }
+
+    @GetMapping("/signup")
+    public String  signup() {
+        return "signup";
+    }
+
+    //Carry out the login logic
     @PostMapping("/signup")
-    public User creatUser(@RequestBody UserRegisterDto userRegisterDto){
-        User user = userService.create(userRegisterDto);
-        return user;
+    public String createAccount(@ModelAttribute UserRegisterDto user, Model model) {
+        model.addAttribute("user", user);
+        User toSaveUser = userService.create(user);
+
+        User oauthUser = userService.login(user.getEmail(), user.getPassword());
+
+        if(Objects.nonNull(oauthUser)) {
+            return "redirect:/login";
+        } else {
+            return "redirect:/signup";
+        }
+
     }
+
+    //Carry out the login logic
+
+
+
+
 
 }
