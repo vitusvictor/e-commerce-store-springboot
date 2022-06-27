@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container">
+    <div class="row" style="margin-top:20px; margin-left: auto">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form>
+                <fieldset>
+                    <h1>REGISTRATION FORM</h1>
+                    <br>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" class="form-control" title="username" autofocus="true"/>
+                        <!--                    <div class="alert alert-danger error-alert" th:if="${#fields.hasErrors('username')}"></div>-->
+                    </div>
+
+                    <div class="form-group">
+                        <label>E-mail address</label>
+                        <input type="email" class="form-control" title="email" required/>
+                        <!--                    <div class="alert alert-danger error-alert" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>-->
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" title="password" required/>
+                        <!--                    <div class="alert alert-danger error-alert" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>-->
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirm password</label>
+                        <input type="password" class="form-control" title="passwordConfirm" required/>
+                        <!--                    <div class="alert alert-danger error-alert" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"></div>-->
+                    </div>
+
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" title="firstName"/>
+                        <!--                    <div class="alert alert-danger error-alert" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>-->
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" title="lastName"/>
+                        <!--                    <div class="alert alert-danger error-alert" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>-->
+                    </div>
+
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" class="form-control" title="age" required="true"/>
+                        <!--                    <div class="alert alert-danger error-alert" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>-->
+                    </div>
+                    <!--                <p th:text="#{register.required}"></p>-->
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <br><br><br>
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
