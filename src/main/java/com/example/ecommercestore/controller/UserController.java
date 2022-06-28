@@ -27,17 +27,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user") User user ) {
-
+    public String login(@ModelAttribute("user") User user ) { // user is coming from the login @getmapping method
+        System.out.println("reached here");
         User oauthUser = userService.login(user.getEmail(), user.getPassword());
 
-        System.out.print(oauthUser);
+        System.out.print(oauthUser.getEmail());
+        System.out.print(oauthUser.getPassword());
+
         if(Objects.nonNull(oauthUser))
         {
-            if (oauthUser.getEmail().equals("admin@gmail.com") && oauthUser.getPassword().equals("admin")){
-                return "redirect:/adminHome";
-            }
-            return "redirect:/home";
+//            if (oauthUser.getEmail().equals("admin@gmail.com") && oauthUser.getPassword().equals("admin")){
+                return "redirect:/admin_home";
+//            }
+//            return "redirect:/home";
         } else {
             return "redirect:/login";
         }
@@ -46,8 +48,8 @@ public class UserController {
 
     @GetMapping("/home")
     public String home(Model model) {
-        List<User> listOfUsers = userService.getAllUsers();
-        model.addAttribute("listOfUsers", listOfUsers);
+//        List<User> listOfUsers = userService.getAllUsers();
+//        model.addAttribute("listOfUsers", listOfUsers);
         return "home";
     }
 
@@ -60,7 +62,8 @@ public class UserController {
     @PostMapping("/signup")
     public String createAccount(@ModelAttribute UserRegisterDto user, Model model) {
         model.addAttribute("user", user);
-        User toSaveUser = userService.create(user);
+        User LoggedInUser = userService.create(user);
+//        model.addAttribute("user", LoggedInUser);
 
         User oauthUser = userService.login(user.getEmail(), user.getPassword());
 

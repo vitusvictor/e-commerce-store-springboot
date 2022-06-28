@@ -12,5 +12,5 @@ public interface UserService {
     User getUser(Long id);
     void deleteUser(Long id);
     User updateUser(UpdateUserDto updateUserDto, String email);
-    public User login(String email, String password);
+    User login(String email, String password);
 }
