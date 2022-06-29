@@ -2,12 +2,16 @@ package com.example.ecommercestore.service;
 
 import com.example.ecommercestore.dto.ProductDto;
 import com.example.ecommercestore.dto.UpdateUserDto;
-import com.example.ecommercestore.dto.UserRegisterDto;
+import com.example.ecommercestore.dto.UserDto;
 import com.example.ecommercestore.exception.CustomAppException;
+import com.example.ecommercestore.models.Cart;
 import com.example.ecommercestore.models.User;
 import com.example.ecommercestore.models.Product;
+import com.example.ecommercestore.models.WishList;
+import com.example.ecommercestore.repository.CartRepository;
 import com.example.ecommercestore.repository.ProductRepository;
 import com.example.ecommercestore.repository.UserRepository;
+import com.example.ecommercestore.repository.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +22,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private ProductRepository productRepository;
+    private WishListRepository wishListRepository;
+    private CartRepository cartRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, ProductRepository productRepository) {
@@ -26,20 +32,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(UserRegisterDto userRegisterDto) {
-        Optional<User> dbUser = userRepository.findByEmail(userRegisterDto.getEmail());
+    public User create(UserDto userDto) {
+        Optional<User> dbUser = userRepository.findByEmail(userDto.getEmail());
         if (dbUser.isPresent()) {
             throw new CustomAppException("User already exists.");
         }
 
         User user = new User();
 
-        user.setUsername(userRegisterDto.getUsername());
-        user.setEmail(userRegisterDto.getEmail());
-        user.setPassword(userRegisterDto.getPassword());
-        user.setFirstName(userRegisterDto.getFirstName());
-        user.setLastName(userRegisterDto.getLastName());
-        user.setAge(userRegisterDto.getAge());
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setAge(userDto.getAge());
 
         return userRepository.save(user);
     }
@@ -48,6 +54,8 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+
 
     @Override
     public List<Product> getAllProducts() {
@@ -76,6 +84,16 @@ public class UserServiceImpl implements UserService {
         product1.setPrice(product.getPrice());
 
         return productRepository.save(product1);
+    }
+
+    @Override
+    public List<WishList> getWishList(String email) {
+        return wishListRepository.findByEmail(email).orElseThrow(()-> new CustomAppException("Nothing found!"));
+    }
+
+    @Override
+    public List<Cart> getCart(String email) {
+        return  cartRepository.findByEmail(email).orElseThrow(()-> new CustomAppException("Nothing found!"));
     }
 
     @Override

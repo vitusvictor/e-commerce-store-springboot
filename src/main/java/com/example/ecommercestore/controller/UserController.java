@@ -1,13 +1,13 @@
 package com.example.ecommercestore.controller;
 
 import com.example.ecommercestore.dto.ProductDto;
-import com.example.ecommercestore.dto.UserRegisterDto;
+import com.example.ecommercestore.dto.UserDto;
 import com.example.ecommercestore.exception.CustomAppException;
+import com.example.ecommercestore.models.Cart;
 import com.example.ecommercestore.models.Product;
 import com.example.ecommercestore.models.User;
 import com.example.ecommercestore.repository.ProductRepository;
 import com.example.ecommercestore.service.UserService;
-import com.example.ecommercestore.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -61,7 +60,7 @@ public class UserController {
 
     //Carry out the login logic
     @PostMapping("/signup")
-    public String createAccount(@ModelAttribute UserRegisterDto user, Model model) {
+    public String createAccount(@ModelAttribute UserDto user, Model model) {
 //        model.addAttribute("user", user);
         System.out.println(user.getFirstName() + " " + user.getEmail());
         User LoggedInUser = userService.create(user);
@@ -155,8 +154,8 @@ public class UserController {
     }
 
     @GetMapping("/viewCart")
-    public ModelAndView viewCart() {
-        List<Product> listOfProducts = productRepository.findAll();
+    public ModelAndView viewCart(@ModelAttribute("userDto") UserDto userDto) {
+        List<Cart> listOfProducts = userService.getCart(userDto.getEmail());
         ModelAndView mav = new ModelAndView("viewWishList");
 
         mav.addObject("listOfProducts", listOfProducts);
@@ -164,8 +163,8 @@ public class UserController {
     }
 
     @GetMapping("/viewWishList")
-    public ModelAndView viewWishlist() {
-        List<Product> listOfProducts = productRepository.findAll();
+    public ModelAndView viewWishlist(@ModelAttribute("userDto") UserDto userDto) {
+        List<Cart> listOfProducts = userService.getCart(userDto.getEmail());
         ModelAndView mav = new ModelAndView("viewWishList");
 
         mav.addObject("listOfProducts", listOfProducts);
