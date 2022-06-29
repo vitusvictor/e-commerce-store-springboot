@@ -145,4 +145,30 @@ public class UserController {
         return "redirect:/viewProducts";
     }
 
+    @GetMapping("/customerViewProducts")
+    public ModelAndView customerViewProducts() {
+        List<Product> listOfProducts = productRepository.findAll();
+        ModelAndView mav = new ModelAndView("customerViewProduct");
+
+        mav.addObject("listOfProducts", listOfProducts);
+        return mav;
+    }
+
+    @GetMapping("/viewCart")
+    public ModelAndView viewCart() {
+        List<Product> listOfProducts = productRepository.findAll();
+        ModelAndView mav = new ModelAndView("viewWishList");
+
+        mav.addObject("listOfProducts", listOfProducts);
+        return mav;
+    }
+
+    @GetMapping("/viewWishList")
+    public ModelAndView viewWishlist() {
+        List<Product> listOfProducts = productRepository.findAll();
+        ModelAndView mav = new ModelAndView("viewWishList");
+
+        mav.addObject("listOfProducts", listOfProducts);
+        return mav;
+    }
 }
