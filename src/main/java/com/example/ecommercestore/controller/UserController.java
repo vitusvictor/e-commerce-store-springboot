@@ -6,6 +6,7 @@ import com.example.ecommercestore.exception.CustomAppException;
 import com.example.ecommercestore.models.Cart;
 import com.example.ecommercestore.models.Product;
 import com.example.ecommercestore.models.User;
+import com.example.ecommercestore.models.WishList;
 import com.example.ecommercestore.repository.ProductRepository;
 import com.example.ecommercestore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class UserController {
         User oauthUser = userService.login(user.getEmail(), user.getPassword());
 
         if (oauthUser != null) {
-            model.addAttribute("userDetails", oauthUser);
+            model.addAttribute("user", oauthUser);
             if (oauthUser.getEmail().equals("admin@gmail.com") && oauthUser.getPassword().equals("1234")){
                 return "admin_home";
             }
@@ -154,20 +155,58 @@ public class UserController {
     }
 
     @GetMapping("/viewCart")
-    public ModelAndView viewCart(@ModelAttribute("userDto") UserDto userDto) {
-        List<Cart> listOfProducts = userService.getCart(userDto.getEmail());
-        ModelAndView mav = new ModelAndView("viewWishList");
+    public ModelAndView viewCart(@ModelAttribute("user") User user) {
+        System.out.println("user email from cart" + user.getEmail());
+        List<Cart> listOfProducts = userService.getCart(user.getEmail());
+        ModelAndView mav = new ModelAndView("viewCart");
 
         mav.addObject("listOfProducts", listOfProducts);
+        mav.addObject("user", user);
+
         return mav;
     }
 
     @GetMapping("/viewWishList")
-    public ModelAndView viewWishlist(@ModelAttribute("userDto") UserDto userDto) {
-        List<Cart> listOfProducts = userService.getCart(userDto.getEmail());
+    public ModelAndView viewWishlist(@ModelAttribute("user") User user) {
+        System.out.println("user email from wish" + user.getEmail());
+
+        List<WishList> listOfProducts = userService.getWishList(user.getEmail());
         ModelAndView mav = new ModelAndView("viewWishList");
 
         mav.addObject("listOfProducts", listOfProducts);
+        mav.addObject("user", user);
+
         return mav;
     }
-}
+
+    @PostMapping("/addToCart/{id}")
+    public String addToCart(@ModelAttribute User user, @PathVariable String id) {
+        System.out.println("user email ... " + user.getEmail());
+
+        userService.addToCart(Long.parseLong(id), user.getEmail());
+
+        return "redirect:/viewProducts";
+    }
+
+    @PostMapping("/addToWishList/{id}")
+    public String addToWishList(@ModelAttribute User user, @PathVariable String id) {
+        System.out.println("user email ... " + user.getEmail());
+
+        userService.addToWishList(Long.parseLong(id), user.getEmail());
+
+        return "redirect:/viewProducts";
+    }
+
+    @GetMapping("/removeFromCart/{id}")
+    public String removeFromCart(@ModelAttribute User user, @PathVariable String id) {
+        System.out.println("email :" + user.getEmail());
+        userService.removeFromCart(Long.parseLong(id), user.getEmail());
+        return "redirect:viewCart";
+    }
+
+    @GetMapping("/removeFromWishList/{id}")
+    public String removeFromWishList(@ModelAttribute User user, @PathVariable String id) {
+        System.out.println("email :" + user.getEmail());
+        userService.removeFromWishList(Long.parseLong(id), user.getEmail());
+        return "redirect:viewWishList";
+    }}

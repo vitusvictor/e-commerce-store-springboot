@@ -75,9 +75,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public WishList addToWishList(Long id, String email) {
+        Product product1 = productRepository.findById(id)
+                        .orElseThrow(()-> new CustomAppException("Product not found!"));
+
+        WishList wishList = new WishList();
+
+        wishList.setProductName(product1.getProductName());
+        wishList.setCategory(product1.getCategory());
+        wishList.setPrice(product1.getPrice());
+        wishList.setEmail(email);
+
+        return wishListRepository.save(wishList);
+    }
+
+    @Override
+    public Cart addToCart(Long id, String email) {
+        Product product1 = productRepository.findById(id)
+                .orElseThrow(()-> new CustomAppException("Product not found!"));
+
+        Cart cart = new Cart();
+
+        cart.setProductName(product1.getProductName());
+        cart.setCategory(product1.getCategory());
+        cart.setPrice(product1.getPrice());
+        cart.setEmail(email);
+
+        return cartRepository.save(cart);
+    }
+
+    @Override
     public Product updateProduct(Product product, Long id) {
         Product product1 = productRepository.findById(id)
-                .orElseThrow(()-> new CustomAppException("User doesn't exit."));
+                .orElseThrow(()-> new CustomAppException("Product doesn't exit."));
 
         product1.setProductName(product.getProductName());
         product1.setCategory(product.getCategory());
@@ -117,6 +147,16 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new CustomAppException("Product does not exist."));
 
         productRepository.delete(product);
+    }
+
+    @Override
+    public void removeFromWishList(Long id, String email) {
+        wishListRepository.findByEmailAndId(email, id);
+    }
+
+    @Override
+    public void removeFromCart(Long id, String email) {
+        cartRepository.findByEmailAndId(email, id);
     }
 
     @Override

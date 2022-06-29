@@ -18,10 +18,19 @@ public interface UserService {
 
     void deleteProduct(Long id);
 
+    void removeFromWishList(Long id, String email);
+
+    void removeFromCart(Long id, String email);
+
     User updateUser(UpdateUserDto updateUserDto, String email);
     User login(String email, String password);
     List<Product> getAllProducts();
     Product createProduct(ProductDto productDto);
+
+    WishList addToWishList(Long id, String email);
+
+    Cart addToCart(Long id, String email);
+
     Product updateProduct(Product product, Long id);
     List<WishList> getWishList(String email);
     List<Cart> getCart(String email);
