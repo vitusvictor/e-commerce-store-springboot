@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Login</title>
+</head>
+
+<body>
+<div class="container" style="margin-bottom: 30px">
+    <div class="row" style="align-content: center">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form action="#" th:action="@{/editProduct}" method="post" th:object="${product}">
+                <div class="form-group">
+                    <label>ID</label>
+                    <input type="text" name="id" th:field="${product.id}" class="form-control" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="productName" th:field="${product.productName}" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" name="category" th:field="${product.category}" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="text" name="price" th:field="${product.price}" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Sign in</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
