@@ -4,10 +4,10 @@ import com.example.ecommercestore.dto.ProductDto;
 import com.example.ecommercestore.dto.UpdateUserDto;
 import com.example.ecommercestore.dto.UserDto;
 import com.example.ecommercestore.exception.CustomAppException;
-import com.example.ecommercestore.models.Cart;
+import com.example.ecommercestore.models.CartItem;
 import com.example.ecommercestore.models.User;
 import com.example.ecommercestore.models.Product;
-import com.example.ecommercestore.models.WishList;
+import com.example.ecommercestore.models.WishListItem;
 import com.example.ecommercestore.repository.CartRepository;
 import com.example.ecommercestore.repository.ProductRepository;
 import com.example.ecommercestore.repository.UserRepository;
@@ -20,9 +20,13 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private ProductRepository productRepository;
+    @Autowired
     private WishListRepository wishListRepository;
+    @Autowired
     private CartRepository cartRepository;
 
     @Autowired
@@ -75,33 +79,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public WishList addToWishList(Long id, String email) {
+    public WishListItem addToWishList(Long id, String email) {
         Product product1 = productRepository.findById(id)
                         .orElseThrow(()-> new CustomAppException("Product not found!"));
 
-        WishList wishList = new WishList();
+        WishListItem wishListItem = new WishListItem();
 
-        wishList.setProductName(product1.getProductName());
-        wishList.setCategory(product1.getCategory());
-        wishList.setPrice(product1.getPrice());
-        wishList.setEmail(email);
+        wishListItem.setProductName(product1.getProductName());
+        wishListItem.setCategory(product1.getCategory());
+        wishListItem.setPrice(product1.getPrice());
+        wishListItem.setEmail(email);
 
-        return wishListRepository.save(wishList);
+        return wishListRepository.save(wishListItem);
     }
 
     @Override
-    public Cart addToCart(Long id, String email) {
+    public CartItem addToCart(Long id, String email) {
         Product product1 = productRepository.findById(id)
                 .orElseThrow(()-> new CustomAppException("Product not found!"));
 
-        Cart cart = new Cart();
+        CartItem cartItem = new CartItem();
 
-        cart.setProductName(product1.getProductName());
-        cart.setCategory(product1.getCategory());
-        cart.setPrice(product1.getPrice());
-        cart.setEmail(email);
+        cartItem.setProductName(product1.getProductName());
+        cartItem.setCategory(product1.getCategory());
+        cartItem.setPrice(product1.getPrice());
+        cartItem.setEmail(email);
 
-        return cartRepository.save(cart);
+        return cartRepository.save(cartItem);
     }
 
     @Override
@@ -117,12 +121,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<WishList> getWishList(String email) {
+    public List<WishListItem> getWishList(String email) {
         return wishListRepository.findByEmail(email).orElseThrow(()-> new CustomAppException("Nothing found!"));
     }
 
     @Override
-    public List<Cart> getCart(String email) {
+    public List<CartItem> getCart(String email) {
         return  cartRepository.findByEmail(email).orElseThrow(()-> new CustomAppException("Nothing found!"));
     }
 
@@ -151,12 +155,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void removeFromWishList(Long id, String email) {
-        wishListRepository.findByEmailAndId(email, id);
+        WishListItem wishListItem = wishListRepository.findByEmailAndId(email, id)
+                .orElseThrow(() -> new CustomAppException("Product does not exist."));
+
+        wishListRepository.delete(wishListItem);
     }
 
     @Override
     public void removeFromCart(Long id, String email) {
-        cartRepository.findByEmailAndId(email, id);
+        CartItem cartItem = cartRepository.findByEmailAndId(email, id)
+                .orElseThrow(() -> new CustomAppException("Product does not exist."));
+
+        cartRepository.delete(cartItem);
     }
 
     @Override

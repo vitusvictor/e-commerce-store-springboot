@@ -1,13 +1,14 @@
 package com.example.ecommercestore.repository;
 
-import com.example.ecommercestore.models.Cart;
-import com.example.ecommercestore.models.WishList;
+import com.example.ecommercestore.models.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CartRepository extends JpaRepository<Cart, Long> {
-    Optional<List<Cart>> findByEmail(String email);
-    void findByEmailAndId(String id, Long email);
+@Repository
+public interface CartRepository extends JpaRepository<CartItem, Long> {
+    Optional<List<CartItem>> findByEmail(String email);
+    Optional<CartItem> findByEmailAndId(String id, Long email);
 }

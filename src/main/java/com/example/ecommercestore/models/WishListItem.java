@@ -10,8 +10,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "cart")
-public class Cart {
+@Table(name = "wishlist")
+public class WishListItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

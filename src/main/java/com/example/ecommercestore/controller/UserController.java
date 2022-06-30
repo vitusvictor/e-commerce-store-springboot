@@ -3,10 +3,10 @@ package com.example.ecommercestore.controller;
 import com.example.ecommercestore.dto.ProductDto;
 import com.example.ecommercestore.dto.UserDto;
 import com.example.ecommercestore.exception.CustomAppException;
-import com.example.ecommercestore.models.Cart;
+import com.example.ecommercestore.models.CartItem;
 import com.example.ecommercestore.models.Product;
 import com.example.ecommercestore.models.User;
-import com.example.ecommercestore.models.WishList;
+import com.example.ecommercestore.models.WishListItem;
 import com.example.ecommercestore.repository.ProductRepository;
 import com.example.ecommercestore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,12 @@ import java.util.Objects;
 
 @Controller
 public class UserController {
+
     @Autowired
     private UserService userService;
     @Autowired
     private ProductRepository productRepository;
+
 
     @GetMapping({"/login", "/"})
     public ModelAndView getLoginForm(){
@@ -34,23 +36,28 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute User user, Model model ) { // user is coming from the login @getmapping method
+    public ModelAndView login(@ModelAttribute("user") User user) {
         User oauthUser = userService.login(user.getEmail(), user.getPassword());
 
         if (oauthUser != null) {
-            model.addAttribute("user", oauthUser);
             if (oauthUser.getEmail().equals("admin@gmail.com") && oauthUser.getPassword().equals("1234")){
-                return "admin_home";
+                ModelAndView mav = new ModelAndView("admin_home");
+                mav.addObject("user", oauthUser);
+                mav.addObject("email", user.getEmail());
+                return mav;
             }
-            return "home";
+
+            ModelAndView mav1 = new ModelAndView("home");
+            mav1.addObject("user", oauthUser);
+            mav1.addObject("email", user.getEmail());
+            return mav1;
         } else {
-            return "signup";
+            return new ModelAndView("signup");
         }
     }
 
     @GetMapping("/home")
     public String home() {
-
         return "home";
     }
 
@@ -59,20 +66,19 @@ public class UserController {
         return "signup";
     }
 
-    //Carry out the login logic
     @PostMapping("/signup")
-    public String createAccount(@ModelAttribute UserDto user, Model model) {
-//        model.addAttribute("user", user);
-        System.out.println(user.getFirstName() + " " + user.getEmail());
+    public ModelAndView createAccount(@ModelAttribute UserDto user, Model model) {
         User LoggedInUser = userService.create(user);
-        model.addAttribute("user", LoggedInUser);
+
+        ModelAndView mav = new ModelAndView("login");
+        mav.addObject("user", LoggedInUser);
 
         User oauthUser = userService.login(user.getEmail(), user.getPassword());
 
         if(Objects.nonNull(oauthUser)) {
-            return "redirect:/login";
+            return mav;
         } else {
-            return "redirect:/signup";
+            return new ModelAndView("signup");
         }
     }
 
@@ -85,7 +91,6 @@ public class UserController {
     @PostMapping("/adminAddProduct")
     public String adminAddProduct(@ModelAttribute("product") ProductDto product, Model model) {
         userService.createProduct(product);
-
         return "redirect:/viewProducts";
     }
 
@@ -93,7 +98,6 @@ public class UserController {
     public ModelAndView viewProducts(){
         List<Product> listOfProducts = productRepository.findAll();
         ModelAndView mav = new ModelAndView("viewProducts");
-
         mav.addObject("listOfProducts", listOfProducts);
         return mav;
     }
@@ -102,7 +106,6 @@ public class UserController {
     public ModelAndView viewUsers(){
         List<User> listOfUsers = userService.getAllUsers();
         ModelAndView mav = new ModelAndView("viewUsers");
-
         mav.addObject("listOfUsers", listOfUsers);
         return mav;
     }
@@ -128,85 +131,64 @@ public class UserController {
 
     @PostMapping("/editProduct/{id}")
     public String editProduct(@ModelAttribute Product product, @PathVariable String id) {
-        System.out.println("widthin the edit...");
-        System.out.println(id);
-        System.out.println("name" + product.getProductName());
-        System.out.println("price" + product.getPrice());
-
         userService.updateProduct(product, Long.parseLong(id));
-
         return "redirect:/viewProducts";
     }
 
     @GetMapping("/deleteProduct/{id}")
     public String deleteAProduct(@PathVariable String id) {
         userService.deleteProduct(Long.parseLong(id));
-
         return "redirect:/viewProducts";
     }
 
-    @GetMapping("/customerViewProducts")
-    public ModelAndView customerViewProducts() {
+///////////////////////////////////////////////////////////////////////////////////////
+    @GetMapping("/customerViewProducts/{email}")
+    public ModelAndView customerViewProducts(@PathVariable String email) {
         List<Product> listOfProducts = productRepository.findAll();
-        ModelAndView mav = new ModelAndView("customerViewProduct");
-
+        ModelAndView mav = new ModelAndView("customerViewProducts");
         mav.addObject("listOfProducts", listOfProducts);
         return mav;
     }
 
-    @GetMapping("/viewCart")
-    public ModelAndView viewCart(@ModelAttribute("user") User user) {
-        System.out.println("user email from cart" + user.getEmail());
-        List<Cart> listOfProducts = userService.getCart(user.getEmail());
+    @GetMapping("/viewCart/{email}")
+    public ModelAndView viewCart(@PathVariable String email) {
+        List<CartItem> listOfProducts = userService.getCart(email);
         ModelAndView mav = new ModelAndView("viewCart");
-
         mav.addObject("listOfProducts", listOfProducts);
-        mav.addObject("user", user);
-
+        mav.addObject("email", email);
         return mav;
     }
 
-    @GetMapping("/viewWishList")
-    public ModelAndView viewWishlist(@ModelAttribute("user") User user) {
-        System.out.println("user email from wish" + user.getEmail());
-
-        List<WishList> listOfProducts = userService.getWishList(user.getEmail());
+    @GetMapping("/viewWishList/{email}")
+    public ModelAndView viewWishlist(@PathVariable String email) {
+        List<WishListItem> listOfProducts = userService.getWishList(email);
         ModelAndView mav = new ModelAndView("viewWishList");
-
         mav.addObject("listOfProducts", listOfProducts);
-        mav.addObject("user", user);
-
+        mav.addObject("email", email);
         return mav;
     }
 
-    @PostMapping("/addToCart/{id}")
-    public String addToCart(@ModelAttribute User user, @PathVariable String id) {
-        System.out.println("user email ... " + user.getEmail());
-
-        userService.addToCart(Long.parseLong(id), user.getEmail());
-
-        return "redirect:/viewProducts";
+    @GetMapping("/addToCart/{id}/{email}")
+    public String addToCart(@PathVariable String email, @PathVariable String id) {
+        userService.addToCart(Long.parseLong(id), email);
+        return "redirect:/customerViewProducts/{email}";
     }
 
-    @PostMapping("/addToWishList/{id}")
-    public String addToWishList(@ModelAttribute User user, @PathVariable String id) {
-        System.out.println("user email ... " + user.getEmail());
-
-        userService.addToWishList(Long.parseLong(id), user.getEmail());
-
-        return "redirect:/viewProducts";
+    @GetMapping("/addToWishList/{id}/{email}")
+    public String addToWishList(@PathVariable String email, @PathVariable String id) {
+        userService.addToWishList(Long.parseLong(id), email);
+        return "redirect:/customerViewProducts/{email}";
     }
 
-    @GetMapping("/removeFromCart/{id}")
-    public String removeFromCart(@ModelAttribute User user, @PathVariable String id) {
-        System.out.println("email :" + user.getEmail());
-        userService.removeFromCart(Long.parseLong(id), user.getEmail());
-        return "redirect:viewCart";
+    @GetMapping("/removeFromCart/{id}/{email}")
+    public String removeFromCart(@PathVariable String email, @PathVariable String id) {
+        userService.removeFromCart(Long.parseLong(id), email);
+        return "redirect:/viewCart/{email}";
     }
 
-    @GetMapping("/removeFromWishList/{id}")
-    public String removeFromWishList(@ModelAttribute User user, @PathVariable String id) {
-        System.out.println("email :" + user.getEmail());
-        userService.removeFromWishList(Long.parseLong(id), user.getEmail());
-        return "redirect:viewWishList";
-    }}
+    @GetMapping("/removeFromWishList/{id}/{email}")
+    public String removeFromWishList(@PathVariable String email, @PathVariable String id) {
+        userService.removeFromWishList(Long.parseLong(id), email);
+        return "redirect:/viewWishList/{email}";
+    }
+}
