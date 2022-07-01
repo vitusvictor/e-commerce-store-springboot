@@ -10,7 +10,7 @@ import com.example.ecommercestore.models.Product;
 import com.example.ecommercestore.models.WishListItem;
 import com.example.ecommercestore.repository.CartRepository;
 import com.example.ecommercestore.repository.ProductRepository;
-import com.example.ecommercestore.repository.UserRepository;
+import com.example.ecommercestore.repository.AdminRepository;
 import com.example.ecommercestore.repository.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    private UserRepository userRepository;
+    private AdminRepository adminRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -30,14 +30,14 @@ public class UserServiceImpl implements UserService {
     private CartRepository cartRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ProductRepository productRepository) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(AdminRepository adminRepository, ProductRepository productRepository) {
+        this.adminRepository = adminRepository;
         this.productRepository = productRepository;
     }
 
     @Override
     public User create(UserDto userDto) {
-        Optional<User> dbUser = userRepository.findByEmail(userDto.getEmail());
+        Optional<User> dbUser = adminRepository.findByEmail(userDto.getEmail());
         if (dbUser.isPresent()) {
             throw new CustomAppException("User already exists.");
         }
@@ -51,32 +51,30 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
         user.setAge(userDto.getAge());
 
-        return userRepository.save(user);
+        return adminRepository.save(user);
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-
+//    @Override
+//    public List<User> getAllUsers() {
+//        return adminRepository.findAll();
+//    }
 
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    @Override
-    public Product createProduct(ProductDto productDto) {
-
-        Product product = new Product();
-
-        product.setProductName(productDto.getProductName());
-        product.setCategory(productDto.getCategory());
-        product.setPrice(productDto.getPrice());
-
-        return productRepository.save(product);
-    }
+//    @Override
+//    public Product createProduct(ProductDto productDto) {
+//
+//        Product product = new Product();
+//
+//        product.setProductName(productDto.getProductName());
+//        product.setCategory(productDto.getCategory());
+//        product.setPrice(productDto.getPrice());
+//
+//        return productRepository.save(product);
+//    }
 
     @Override
     public WishListItem addToWishList(Long id, String email) {
@@ -99,7 +97,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(()-> new CustomAppException("Product not found!"));
 
         CartItem cartItem = new CartItem();
-
+        System.out.println("printing from addToCart user implementation" + email);
         cartItem.setProductName(product1.getProductName());
         cartItem.setCategory(product1.getCategory());
         cartItem.setPrice(product1.getPrice());
@@ -108,17 +106,17 @@ public class UserServiceImpl implements UserService {
         return cartRepository.save(cartItem);
     }
 
-    @Override
-    public Product updateProduct(Product product, Long id) {
-        Product product1 = productRepository.findById(id)
-                .orElseThrow(()-> new CustomAppException("Product doesn't exit."));
-
-        product1.setProductName(product.getProductName());
-        product1.setCategory(product.getCategory());
-        product1.setPrice(product.getPrice());
-
-        return productRepository.save(product1);
-    }
+//    @Override
+//    public Product updateProduct(Product product, Long id) {
+//        Product product1 = productRepository.findById(id)
+//                .orElseThrow(()-> new CustomAppException("Product doesn't exit."));
+//
+//        product1.setProductName(product.getProductName());
+//        product1.setCategory(product.getCategory());
+//        product1.setPrice(product.getPrice());
+//
+//        return productRepository.save(product1);
+//    }
 
     @Override
     public List<WishListItem> getWishList(String email) {
@@ -130,28 +128,28 @@ public class UserServiceImpl implements UserService {
         return  cartRepository.findByEmail(email).orElseThrow(()-> new CustomAppException("Nothing found!"));
     }
 
-    @Override
-    public User getUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new CustomAppException("User doesn't exist!"));
+//    @Override
+//    public User getUser(Long id) {
+//        User user = adminRepository.findById(id).orElseThrow(()-> new CustomAppException("User doesn't exist!"));
+//
+//        return user;
+//    }
 
-        return user;
-    }
+//    @Override
+//    public void deleteUser(Long id) {
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new CustomAppException("User does not exist."));
+//
+//        userRepository.delete(user);
+//    }
 
-    @Override
-    public void deleteUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new CustomAppException("User does not exist."));
-
-        userRepository.delete(user);
-    }
-
-    @Override
-    public void deleteProduct(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new CustomAppException("Product does not exist."));
-
-        productRepository.delete(product);
-    }
+//    @Override
+//    public void deleteProduct(Long id) {
+//        Product product = productRepository.findById(id)
+//                .orElseThrow(() -> new CustomAppException("Product does not exist."));
+//
+//        productRepository.delete(product);
+//    }
 
     @Override
     public void removeFromWishList(Long id, String email) {
@@ -169,24 +167,24 @@ public class UserServiceImpl implements UserService {
         cartRepository.delete(cartItem);
     }
 
-    @Override
-    public User updateUser(UpdateUserDto updateUserDto, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new CustomAppException("User doesn't exit."));
-
-        user.setUsername(updateUserDto.getUsername());
-        user.setEmail(updateUserDto.getEmail());
-        user.setPassword(updateUserDto.getPassword());
-        user.setFirstName(updateUserDto.getFirstName());
-        user.setLastName(updateUserDto.getLastName());
-        user.setAge(updateUserDto.getAge());
-
-        return userRepository.save(user);
-    }
+//    @Override
+//    public User updateUser(UpdateUserDto updateUserDto, String email) {
+//        User user = adminRepository.findByEmail(email)
+//                .orElseThrow(()-> new CustomAppException("User doesn't exit."));
+//
+//        user.setUsername(updateUserDto.getUsername());
+//        user.setEmail(updateUserDto.getEmail());
+//        user.setPassword(updateUserDto.getPassword());
+//        user.setFirstName(updateUserDto.getFirstName());
+//        user.setLastName(updateUserDto.getLastName());
+//        user.setAge(updateUserDto.getAge());
+//
+//        return adminRepository.save(user);
+//    }
 
     @Override
     public User login(String email, String password) {
-        User user = userRepository.findByEmailAndPassword(email, password)
+        User user = adminRepository.findByEmailAndPassword(email, password)
                 .orElseThrow(()-> new CustomAppException("User doesn't exit."));
 
         return user;

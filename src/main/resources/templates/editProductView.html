@@ -9,11 +9,11 @@
 
 <body>
 <div class="container" style="margin-bottom: 30px">
+    <div th:replace="/admin_home :: navbar"> </div>
+
     <div class="row" style="align-content: center">
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
             <form action="#" th:action="@{/editProduct/__${product.id}__}" method="post" th:object="${product}">
-<!--                {'/editProductView/' + ${product.id}}-->
-<!--                {/editProduct/+${product.id}}-->
                 <div class="form-group">
                     <label>ID</label>
                     <input type="text" name="id" th:field="${product.id}" class="form-control" disabled>

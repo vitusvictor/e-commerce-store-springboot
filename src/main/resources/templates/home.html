@@ -8,33 +8,37 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light container" th:fragment="navbar">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNavDropdown" >
+    <div class="collapse navbar-collapse" id="navbarNavDropdown" th:object="${email}">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-link" th:href="@{'/home'}">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{'/customerViewProducts/' + ${email}}"> Products</a>
+                <a class="nav-link" th:href="@{'/customerViewProducts'}"> Products</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{'/viewCart/' + ${email}}">My Cart</a>
+                <a class="nav-link" th:href="@{'/viewCart'}">My Cart</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{'/viewWishList/' + ${email}}">My Wishlist</a>
+                <a class="nav-link" th:href="@{'/viewWishList'}">My Wishlist</a>
             </li>
-            <li class="nav-item dropdown" style="float: right;">
-                <a class="nav-link dropdown-toggle" href="/signout" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="" style="float: right;">
+                <a class="nav-link dropdown-toggle" th:href="@{'/signout'}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Sign out
                 </a>
             </li>
         </ul>
     </div>
 </nav>
+
+<h1 style="margin: 20px; font-weight: bolder; text-align: center">
+    User Home
+</h1>
 
 </body>
 </html>

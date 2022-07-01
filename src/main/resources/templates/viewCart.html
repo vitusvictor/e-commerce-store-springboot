@@ -8,7 +8,9 @@
 </head>
 <body>
 
-<div class="limiter container">
+<div class="limiter container" th:object="${email}">
+    <div th:replace="/home :: navbar"> </div>
+
     <h1 class="mt-3 md-3">Cart</h1>
     <table class="table table-hover table-danger table-striped mt-3 md-3">
         <thead>
@@ -27,12 +29,12 @@
                 <td>[[${product.productName}]]</td>
                 <td>[[${product.category}]]</td>
                 <td>[[${product.price}]]</td>
-                <td><a th:href="@{'/removeFromCart/' + ${product.id} + '/' + ${email}}" type="button" class="btn btn-info btn-sm">Remove</a></td>
-                <!--                <td><a th:href="@{'/addToWishList/' + ${product.id}}" type="button" class="btn btn-danger btn-sm"><i class='fas'>&#9829;</i>Like</a></td>-->
+                <td><a th:href="@{'/removeFromCart/' + ${product.id}}" type="button" class="btn btn-info btn-sm">Remove</a></td>
             </tr>
         </th:block>
         </tbody>
     </table>
+
 </div>
 
 </body>
