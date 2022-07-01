@@ -1,7 +1,5 @@
 package com.example.ecommercestore.service;
 
-import com.example.ecommercestore.dto.ProductDto;
-import com.example.ecommercestore.dto.UpdateUserDto;
 import com.example.ecommercestore.dto.UserDto;
 import com.example.ecommercestore.exception.CustomAppException;
 import com.example.ecommercestore.models.CartItem;
@@ -54,27 +52,10 @@ public class UserServiceImpl implements UserService {
         return adminRepository.save(user);
     }
 
-//    @Override
-//    public List<User> getAllUsers() {
-//        return adminRepository.findAll();
-//    }
-
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
-
-//    @Override
-//    public Product createProduct(ProductDto productDto) {
-//
-//        Product product = new Product();
-//
-//        product.setProductName(productDto.getProductName());
-//        product.setCategory(productDto.getCategory());
-//        product.setPrice(productDto.getPrice());
-//
-//        return productRepository.save(product);
-//    }
 
     @Override
     public WishListItem addToWishList(Long id, String email) {
@@ -106,18 +87,6 @@ public class UserServiceImpl implements UserService {
         return cartRepository.save(cartItem);
     }
 
-//    @Override
-//    public Product updateProduct(Product product, Long id) {
-//        Product product1 = productRepository.findById(id)
-//                .orElseThrow(()-> new CustomAppException("Product doesn't exit."));
-//
-//        product1.setProductName(product.getProductName());
-//        product1.setCategory(product.getCategory());
-//        product1.setPrice(product.getPrice());
-//
-//        return productRepository.save(product1);
-//    }
-
     @Override
     public List<WishListItem> getWishList(String email) {
         return wishListRepository.findByEmail(email).orElseThrow(()-> new CustomAppException("Nothing found!"));
@@ -127,29 +96,6 @@ public class UserServiceImpl implements UserService {
     public List<CartItem> getCart(String email) {
         return  cartRepository.findByEmail(email).orElseThrow(()-> new CustomAppException("Nothing found!"));
     }
-
-//    @Override
-//    public User getUser(Long id) {
-//        User user = adminRepository.findById(id).orElseThrow(()-> new CustomAppException("User doesn't exist!"));
-//
-//        return user;
-//    }
-
-//    @Override
-//    public void deleteUser(Long id) {
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new CustomAppException("User does not exist."));
-//
-//        userRepository.delete(user);
-//    }
-
-//    @Override
-//    public void deleteProduct(Long id) {
-//        Product product = productRepository.findById(id)
-//                .orElseThrow(() -> new CustomAppException("Product does not exist."));
-//
-//        productRepository.delete(product);
-//    }
 
     @Override
     public void removeFromWishList(Long id, String email) {
@@ -166,21 +112,6 @@ public class UserServiceImpl implements UserService {
 
         cartRepository.delete(cartItem);
     }
-
-//    @Override
-//    public User updateUser(UpdateUserDto updateUserDto, String email) {
-//        User user = adminRepository.findByEmail(email)
-//                .orElseThrow(()-> new CustomAppException("User doesn't exit."));
-//
-//        user.setUsername(updateUserDto.getUsername());
-//        user.setEmail(updateUserDto.getEmail());
-//        user.setPassword(updateUserDto.getPassword());
-//        user.setFirstName(updateUserDto.getFirstName());
-//        user.setLastName(updateUserDto.getLastName());
-//        user.setAge(updateUserDto.getAge());
-//
-//        return adminRepository.save(user);
-//    }
 
     @Override
     public User login(String email, String password) {
