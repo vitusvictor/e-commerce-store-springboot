@@ -35,4 +35,9 @@ public class User {
     @Column(name = "age")
     private int age;
 
+    @OneToOne
+    private CartItem cartItem;
+
+    @OneToOne
+    private WishListItem wishListItem;
 }

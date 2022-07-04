@@ -15,6 +15,7 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+//    private Long productid;
     private String email;
     private String productName;
     private String category;

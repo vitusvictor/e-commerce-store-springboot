@@ -52,7 +52,6 @@ public class AdminServiceImpl implements AdminService {
     public Product updateProduct(Product product, Long id) {
         Product product1 = productRepository.findById(id)
                 .orElseThrow(()-> new CustomAppException("Product doesn't exit."));
-
         product1.setProductName(product.getProductName());
         product1.setCategory(product.getCategory());
         product1.setPrice(product.getPrice());
@@ -62,9 +61,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public User getUser(Long id) {
-        User user = adminRepository.findById(id).orElseThrow(()-> new CustomAppException("User doesn't exist!"));
 
-        return user;
+        return adminRepository.findById(id).orElseThrow(()-> new CustomAppException("User doesn't exist!"));
     }
 
     @Override

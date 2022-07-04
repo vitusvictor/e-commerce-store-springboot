@@ -17,9 +17,9 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-    @Autowired
+//    @Autowired
     private ProductRepository productRepository;
-    @Autowired
+//    @Autowired
     private AdminService adminService;
 
     @GetMapping("/admin_home")
